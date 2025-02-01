@@ -1,0 +1,23 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+  displayName: 'Archive Files'
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'Microsoft Azure Sponsorship'
+    appName: 'test-webapp-sahib'
+    appType: 'webApp'
+    package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
+    deploymentMethod: 'auto'
+  displayName: 'Deploy Web App'
